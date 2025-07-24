@@ -1,18 +1,30 @@
-#include <Arduino.h>
-
-// put function declarations here:
-int myFunction(int, int);
-
+/*#include <Arduino.h>
+#include <stdlib.h>
+#include <DHT.h>
+#include "dht_sensor.h"
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  dht_config_t *dht_cfg = (dht_config_t *) calloc(1, sizeof(dht_config_t));
+
+  if (!dht_cfg)
+  {
+    ESP_LOGE("DHT", "Memory allocation failed");
+    return;
+  }
+  dht_cfg->dht_pin = 4;
+  dht_cfg->dht_type= DHT11;
+  dht_cfg->read_fahrenheit = false;
+
+  xTaskCreate(dhtSensorTask, "DHT task", 4096, dht_cfg, 1, NULL);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  vTaskDelete(NULL);
+}*/
+#include <Arduino.h>
+void setup() {
+  Serial.begin(115200);
 }
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+void loop() {
+  Serial.println("ESP32 OK!");
+  delay(1000);
 }
