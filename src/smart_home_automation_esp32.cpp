@@ -1,8 +1,11 @@
-/*#include <Arduino.h>
+#include <Arduino.h>
 #include <stdlib.h>
 #include <DHT.h>
+#include <esp_log.h>
 #include "dht_sensor.h"
+
 void setup() {
+  Serial.begin(115200);
   dht_config_t *dht_cfg = (dht_config_t *) calloc(1, sizeof(dht_config_t));
 
   if (!dht_cfg)
@@ -19,12 +22,4 @@ void setup() {
 
 void loop() {
   vTaskDelete(NULL);
-}*/
-#include <Arduino.h>
-void setup() {
-  Serial.begin(115200);
-}
-void loop() {
-  Serial.println("ESP32 OK!");
-  delay(1000);
 }
