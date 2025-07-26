@@ -13,7 +13,7 @@
 #include <esp_log.h>
 #include "pir_sensor.h"
 
-
+#define PIR_SENSOR_TIMEOUT_MS pdMS_TO_TICKS(5000)
 static const char *TAG = "PIR_SENSOR";
 
 /**
@@ -37,29 +37,41 @@ void pirSensorTask(void *pvParameters)
     pir_state_t pir_pin_state = PIR_STATE_INVALID;
     pir_state_t latest_reading = PIR_STATE_INVALID;
     TickType_t xPreviousWakeTime = xTaskGetTickCount();
-    TickType_t xFrequency = pdMS_TO_TICKS(1000);
+    TickType_t xFrequency = pdMS_TO_TICKS(500);
+    TickType_t last_motion_tick = 0;
+    TickType_t current_tick = 0;
 
     pinMode(pir_cfg->pir_data_pin, INPUT);
 
     while (1)
     {
         pir_pin_state = (pir_state_t) digitalRead(pir_cfg->pir_data_pin);
-        if(pir_pin_state != PIR_STATE_NO_MOTION && pir_pin_state != PIR_STATE_MOTION)
+        current_tick = xTaskGetTickCount();
+
+        if (latest_reading == PIR_STATE_INVALID)
         {
-            ESP_LOGE(TAG, "Invalid pin state: %d", pir_pin_state);
+            ESP_LOGI(TAG, "[pin %d] No motion detected", pir_cfg->pir_data_pin);
+            latest_reading = PIR_STATE_NO_MOTION;
         }
         else
         {
-            //log only if state have changed, to prevent continues logging
-            if (pir_pin_state != latest_reading)
+            if (pir_pin_state == HIGH)
             {
-                latest_reading = pir_pin_state;
-                if (pir_pin_state == PIR_STATE_NO_MOTION)
-                    ESP_LOGI(TAG, "[pin %d] Motion not detected", pir_cfg->pir_data_pin);
-                else
+                last_motion_tick = current_tick;
+                if (latest_reading != PIR_STATE_MOTION)
+                {
                     ESP_LOGI(TAG, "[pin %d] Motion detected", pir_cfg->pir_data_pin);
+                    latest_reading = PIR_STATE_MOTION;
+                }
+            }
+            else if (latest_reading == PIR_STATE_MOTION && (current_tick - last_motion_tick > PIR_SENSOR_TIMEOUT_MS))
+            {
+                ESP_LOGI(TAG, "[pin %d] Motion ended...", pir_cfg->pir_data_pin);
+                latest_reading = PIR_STATE_INVALID;
             }
         }
         vTaskDelayUntil(&xPreviousWakeTime, xFrequency);
     }
+    free(pir_cfg);
+    vTaskDelete(NULL);
 } 

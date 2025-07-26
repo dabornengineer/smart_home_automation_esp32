@@ -1,4 +1,14 @@
-#include "dht_sensor.h"
+/**
+ * @file dht_sensor.cpp
+ * 
+ * @brief implemetation of DHT sensor function Task That measures and logs
+ * the tempearature and humidity values.
+ * 
+ * The FreeRTOS task measures the Temperature and humidity reading of the DHT11
+ * sensor and logs the value of the measured temperature and humidity value.
+ * 
+ * @param 'pvParameters' a pointer to the DHT sensor configurature
+ */
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
@@ -7,11 +17,21 @@
 #include <DHT_U.h>
 #include <math.h>
 #include <esp_log.h>
+#include "dht_sensor.h"
 
 #define TAG "DHT"
 #define DHT_READ_INTERVAL_MS 2000
-#define MAX_FAILURE_COUNT 10
+#define MAX_FAILURE_COUNT 10  //max number of fialing to read the sensors value before quiting
 
+
+/**
+ * @brief DHT function declaration
+ * 
+ * The function is used to create FreeRTOS task for the DHT sensor, it measures the Tempearture
+ * and Humidity values and logs the readng
+ * 
+ * @param pvParameters is a pointer to the sensors configuration(pir_config_t)
+ */
 void dhtSensorTask(void *pvParameters)
 {
     dht_config_t *dht_cfg = (dht_config_t *) pvParameters;

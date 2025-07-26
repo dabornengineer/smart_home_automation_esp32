@@ -25,10 +25,10 @@ typedef struct {
 /**
  * @brief Enumeration representing the motion state of the PIR sensor.
  */
-typedef enum {
-    PIR_STATE_INVALID = 0xFF,       /**< invalid or uninitialized state */       
-    PIR_STATE_NO_MOTION = LOW,      /**< No motion detected (LOW level logic) */
-    PIR_STATE_MOTION = HIGH         /**< Motion detected (HIGH level logic) */
+typedef enum {     
+    PIR_STATE_NO_MOTION = 0,      /**< No motion detected (LOW level logic) */
+    PIR_STATE_MOTION,             /**< Motion detected (HIGH level logic) */
+    PIR_STATE_INVALID             /**< invalid or uninitialized state */  
 } pir_state_t;
 
 /**
