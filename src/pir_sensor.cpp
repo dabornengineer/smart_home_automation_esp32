@@ -58,6 +58,7 @@ void pirSensorTask(void *pvParameters)
             if (pir_pin_state == HIGH)
             {
                 last_motion_tick = current_tick;
+                // log only if state chnages to avoid multiple loggind
                 if (latest_reading != PIR_STATE_MOTION)
                 {
                     ESP_LOGI(TAG, "[pin %d] Motion detected", pir_cfg->pir_data_pin);
@@ -66,7 +67,7 @@ void pirSensorTask(void *pvParameters)
             }
             else if (latest_reading == PIR_STATE_MOTION && (current_tick - last_motion_tick > PIR_SENSOR_TIMEOUT_MS))
             {
-                ESP_LOGI(TAG, "[pin %d] Motion ended...", pir_cfg->pir_data_pin);
+                //ESP_LOGI(TAG, "[pin %d] Motion ended...", pir_cfg->pir_data_pin);
                 latest_reading = PIR_STATE_INVALID;
             }
         }
