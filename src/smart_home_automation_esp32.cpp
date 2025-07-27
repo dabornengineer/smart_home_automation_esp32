@@ -11,6 +11,7 @@
 #include <esp_log.h>
 #include "dht_sensor.h"
 #include "pir_sensor.h"
+#include "ldr_sensor.h"
 
 /**
  * @brief function that handles the configuration and sensors task creation
@@ -19,6 +20,8 @@ void setup() {
   Serial.begin(115200);
   dht_config_t *dht_cfg = (dht_config_t *) calloc(1, sizeof(dht_config_t));
   pir_config_t *pir_cfg = (pir_config_t *) calloc(1, sizeof(pir_config_t));
+  ldr_config_t *ldr_cfg = (ldr_config_t *) calloc(1, sizeof(ldr_config_t));
+
 
   if (!dht_cfg)
   {
@@ -36,8 +39,16 @@ void setup() {
   }
   pir_cfg->pir_data_pin = 13;        //PIR sensor GPIO pin
 
-  xTaskCreate(dhtSensorTask, "DHT task", 4096, dht_cfg, 1, NULL);
-  xTaskCreate(pirSensorTask, "PIR SENSOR TASK", 4096, pir_cfg, 3, NULL);
+  if(!ldr_cfg)
+  {
+    ESP_LOGE("LDR", "memory allocation failed");
+    return;
+  }
+  ldr_cfg->ldr_gpio_pin = 35;        //LDR sensor GPIO pin
+
+  xTaskCreate(dhtSensorTask, "DHT sensor task", 3072, dht_cfg, 1, NULL);
+  xTaskCreate(pirSensorTask, "PIR sensor task", 2048, pir_cfg, 3, NULL);
+  xTaskCreate(ldrSensorTask, "LDR  sensor Task", 2048, ldr_cfg, 2, NULL);
 }
 
 void loop() {
