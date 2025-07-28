@@ -46,9 +46,9 @@ void setup() {
   }
   ldr_cfg->ldr_gpio_pin = 35;        //LDR sensor GPIO pin
 
-  xTaskCreate(dhtSensorTask, "DHT sensor task", 3072, dht_cfg, 1, NULL);
-  xTaskCreate(pirSensorTask, "PIR sensor task", 2048, pir_cfg, 3, NULL);
-  xTaskCreate(ldrSensorTask, "LDR  sensor Task", 2048, ldr_cfg, 2, NULL);
+  //xTaskCreate(dhtSensorTask, "DHT sensor task", 3072, dht_cfg, 1, NULL);
+  xTaskCreate(pirSensorTask, "PIR sensor task", 4096, pir_cfg, 3, NULL);
+  //xTaskCreate(ldrSensorTask, "LDR  sensor Task", 2048, ldr_cfg, 2, NULL);
 }
 
 void loop() {

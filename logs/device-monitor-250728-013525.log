@@ -1,0 +1,4 @@
+[227573][I][pir_sensor.cpp:64] pirSensorTask(): [PIR_SENSOR] [pin 13] Motion detected
+[239073][I][pir_sensor.cpp:53] pirSensorTask(): [PIR_SENSOR] [pin 13] No motion detected
+[420573][I][pir_sensor.cpp:64] pirSensorTask(): [PIR_SENSOR] [pin 13] Motion detected
+[433073][I][pir_sensor.cpp:53] pirSensorTask(): [PIR_SENSOR] [pin 13] No motion detected

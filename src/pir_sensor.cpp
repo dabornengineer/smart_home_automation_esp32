@@ -50,8 +50,17 @@ void pirSensorTask(void *pvParameters)
 
         if (latest_reading == PIR_STATE_INVALID)
         {
-            ESP_LOGI(TAG, "[pin %d] No motion detected", pir_cfg->pir_data_pin);
-            latest_reading = PIR_STATE_NO_MOTION;
+            if (pir_pin_state == HIGH)
+            {
+                ESP_LOGI(TAG, "[pin %d] Motion detected", pir_cfg->pir_data_pin);
+                last_motion_tick = current_tick;
+                latest_reading = PIR_STATE_MOTION;
+            }
+            else
+            {
+                ESP_LOGI(TAG, "[pin %d] No motion detected", pir_cfg->pir_data_pin);
+                latest_reading = PIR_STATE_NO_MOTION;
+            }
         }
         else
         {

@@ -20,7 +20,7 @@
 #include "dht_sensor.h"
 
 #define TAG "DHT"
-#define DHT_READ_INTERVAL_MS 2000
+#define DHT_READ_INTERVAL_MS 1000
 #define MAX_FAILURE_COUNT 10  //max number of fialing to read the sensors value before quiting
 
 
@@ -43,6 +43,7 @@ void dhtSensorTask(void *pvParameters)
     DHT dht(dht_cfg->dht_pin, dht_cfg->dht_type);
     dht.begin();
 
+    vTaskDelay(pdMS_TO_TICKS(2000));
     const char *unit = dht_cfg->read_fahrenheit? "°F": "°C";
     uint8_t count_failure = 0;
     float temperature_celsius = NAN;
